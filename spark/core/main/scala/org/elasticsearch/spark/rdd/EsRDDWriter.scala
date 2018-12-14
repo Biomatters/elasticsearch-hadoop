@@ -21,6 +21,7 @@ package org.elasticsearch.spark.rdd
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
 import org.apache.spark.TaskContext
+import org.apache.spark.util.TaskCompletionListener
 import org.elasticsearch.hadoop.cfg.PropertiesSettings
 import org.elasticsearch.hadoop.cfg.Settings
 import org.elasticsearch.hadoop.rest.InitializationUtils
@@ -57,7 +58,9 @@ private[spark] class EsRDDWriter[T: ClassTag](val serializedSettings: String,
   def write(taskContext: TaskContext, data: Iterator[T]) {
     val writer = RestService.createWriter(settings, taskContext.partitionId.toLong, -1, log)
 
-    taskContext.addTaskCompletionListener((TaskContext) => writer.close())
+    taskContext.addTaskCompletionListener(new TaskCompletionListener {
+      override def onTaskCompletion(context: TaskContext): Unit = writer.close()
+    })
 
     if (runtimeMetadata) {
       writer.repository.addRuntimeFieldExtractor(metaExtractor)
