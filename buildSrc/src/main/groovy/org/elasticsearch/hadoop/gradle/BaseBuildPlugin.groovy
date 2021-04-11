@@ -181,6 +181,8 @@ class BaseBuildPlugin implements Plugin<Project> {
         project.repositories.maven { url "https://artifacts.elastic.co/maven/" } // default
         project.repositories.maven { url "https://oss.sonatype.org/content/groups/public/" } // oss-only
 
+        project.repositories.maven { url "https://repository.apache.org/content/repositories/snapshots/" }
+
         // Add Ivy repos in order to pull Elasticsearch distributions that have bundled JDKs
         for (String repo : ['snapshots', 'artifacts']) {
             project.repositories.ivy {

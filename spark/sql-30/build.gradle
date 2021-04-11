@@ -9,7 +9,8 @@ apply plugin: 'spark.variants'
 
 sparkVariants {
     capabilityGroup 'org.elasticsearch.spark.sql.variant'
-    setDefaultVariant "spark30scala212", spark30Version, scala212Version
+    addFeatureVariant "spark32scala213", spark32Version, scala213Version
+    addFeatureVariant "spark30scala212", spark30Version, scala212Version
 
     all { SparkVariantPlugin.SparkVariant variant ->
         String scalaCompileTaskName = project.sourceSets
@@ -128,7 +129,7 @@ sparkVariants {
         String generatedJavaDirectory = "$buildDir/generated/java/${variant.name}"
         Configuration scalaCompilerPlugin = project.configurations.maybeCreate(variant.configuration('scalaCompilerPlugin'))
         scalaCompilerPlugin.defaultDependencies { dependencies ->
-            dependencies.add(project.dependencies.create("com.typesafe.genjavadoc:genjavadoc-plugin_${variant.scalaVersion}:0.13"))
+            dependencies.add(project.dependencies.create("com.typesafe.genjavadoc:genjavadoc-plugin_${variant.scalaVersion}:0.17"))
         }
 
         ScalaCompile compileScala = tasks.getByName(scalaCompileTaskName) as ScalaCompile
